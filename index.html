@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .mapouter{
+        position:relative;
+        text-align:right;
+        height:600px;
+        width:66%;
+        }
+        .gmap_canvas {
+        overflow:hidden;
+        background:none!important;
+        height:100%;
+        width:100%;
+        }
+        *{
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+    body{
+        background-color: pink;
+    }
+    #navbar{
+        width: 100%;
+        height: 77px;
+        /* border: 1px solid red; */
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        background-color: rgb(56, 56, 56);
+        padding-left: 33px;
+        margin-bottom: 25px;
+    }
+    #navbar>div>h1,h3{
+        color: #e96e50;
+        background-color: rgb(56, 56, 56);
+    }
+    input{
+        width: 80%;
+        height: 44px;
+        background-color: white;
+        padding: 11px;
+        /* margin: 25px 0px 0px 25px; */
+        /* display: block; */
+        /* margin: auto; */
+        margin-left: 111px;
+        border-radius: 7px 0px 0px 7px;
+        font-size:14px;
+    }
+    button{
+        width: 111px;
+        height: 44px;
+        background-color: rgb(56, 56, 56);
+        color: white;
+        border-radius: 0px 7px 7px 0px;
+        font-weight: 600;
+        margin-left: -5px;
+        padding-top: 1px;
+    }
+    #container{
+        width: 33%;
+        /* margin: auto; */
+        height: 555px;
+        /* display: grid;
+        grid-template-columns: repeat(4,1fr);
+        grid-template-rows: auto; */
+        /* gap: 20px; */
+        margin-top: 44px;
+        margin-right: 7px;
+        /* background-color: black; */
+        padding: 25px;
+        border-radius:22px;
+        /* margin-left: 11px; */
+    }
+        iframe{
+        width: 100%;
+        height: 190%;
+        display: block;
+        /* margin: auto; */
+        margin-top: 44px;
+        border-radius:22px
+    }
+    #display{
+        display: flex;
+    }
+    p{
+        margin: 11px;
+        /* font-size:33px; */
+        /* color: #e96e50; */
+    }
+    #container,#box1,#box2,#heading1{
+        /* background-color:black ; */
+        /* border: 1px solid red; */
+        color: white;
+    }
+    #cityName{
+        color:blueviolet;
+    }
+    #box1{
+        display: flex;
+        justify-content: start;
+        font-size: 33px;
+        font-weight:200;
+        color: #e96e50;
+    }
+    #heading1{
+        font-size: 16px;
+        margin-left: 11px;
+        margin-bottom: 11px;
+        color: rgb(152, 23, 141);
+    }
+    #box2{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        grid-template-rows: auto;
+        gap: 5px;
+        font-size: 18px;
+        color: yellowgreen;
+    }
+    #weather{
+        font-size: 55px;
+    }
+    #temp{
+        padding-top: 16px;
+    }
+    #heading{
+        margin-bottom: 22px;
+    }
+     </style>
+</head>
+<body>
+    <div id="navbar">
+        <div>
+            <h1>⛅</h1>
+            <h3>OpenWeather</h3>
+        </div>
+    </div>
+    <input type="text" id="query" placeholder="CITY NAME">
+    <button onclick="getWeather()">Search</button>
+    <div id="display">
+        <div id="container"></div>
+<!-- Always put data below container tag otherwise show error that cannot set properties of null -->
+        <div class="mapouter">
+            <div class="gmap_canvas">
+                <iframe width="600"
+                    height="500"
+                    id="gmap_canvas"
+                    frameborder="0" 
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0">
+                </iframe>  
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+function append(data){
+    console.log(data)
+    let url=`https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed&units=metric`
+    let container=document.getElementById('container');
+    container.innerHTML=null;
+    // let h2=document.createElement("h2");
+    // h2.innerText=data.name;
+
+    // let temp=document.createElement("p");
+    // temp.innerText=`Temp:-${data.main.temp}`;
+
+    
+    // let min_temp=document.createElement("p");
+    // min_temp.innerText=`Min Temp:-${data.main.temp_min}`;
+
+    
+    // let max_temp=document.createElement("p");
+    // max_temp.innerText=`Max Temp:-${data.main.temp_max}`;
+
+    // container.append(h2,temp,min_temp,max_temp);
+   
+    let name=document.createElement("h1");
+            name.innerText=`CITY ► ${data.name}, ${data.sys.country}`;
+            name.setAttribute("id","cityName");
+
+            let temp=document.createElement("p");
+            temp.innerText=`${data.main.temp}°C`;
+            temp.setAttribute("id","temp");
+
+            let feels_like=document.createElement("h2");
+            feels_like.innerText=`► Feels like ${data.main.feels_like}°C 🌡 `;
+
+            let min_temp=document.createElement("p");
+            min_temp.innerText=`minimum Temperature 🌡 :- ${data.main.temp_min}°C`;
+
+            let max_temp=document.createElement("p");
+            max_temp.innerText=`maximum Temperature 🌡 :-${data.main.temp_max}°C`;
+
+            let humidity=document.createElement("p");
+            humidity.innerText=`Humidity ☃ :- ${data.main.humidity}%`;
+
+            let pressure=document.createElement("p");
+            pressure.innerText=`Pressure ☈ :- ${data.main.pressure}hPa`;
+            
+            let wind_speed=document.createElement("p");
+            wind_speed.innerText=`Wind Speed ☇:-  ${data.wind.speed}m/s WSW`
+            // console.log(data.sy);
+            let absoluteVisibility=+`${data.visibility}`/1000
+            let visibility=document.createElement("p");
+            visibility.innerText=`Visibility ☄ :- ${absoluteVisibility}.0km`
+
+            let weather=document.createElement("p");
+                // weather.style.color="white"
+            weather.setAttribute("id","weather")
+            
+            if(`${data.weather[0].main}`=="Clear"){
+                weather.innerText="🌤";
+                weather.style.color="yellow"
+                }else if(`${data.weather[0].main}`=="Clouds"){
+                weather.innerText="☁";
+                weather.style.color="#ccc"
+                }else if(`${data.weather[0].main}`.includes("Rain")){
+                weather.innerText="🌧";
+                weather.style.color="skyblue"
+            }
+            let h1=document.createElement("div");
+            h1.innerHTML=`<h1>Weather Details ▼</h1>`
+            h1.setAttribute("id","heading");
+            h1.style.color="red"
+            let box1=document.createElement("div");
+            box1.setAttribute("id","box1");
+            let heading1=document.createElement("h2");
+            heading1.setAttribute("id","heading1");
+            let box2=document.createElement("div");
+            box2.setAttribute("id","box2");
+
+            box1.append(weather,temp);
+            heading1.append(feels_like);
+            box2.append(min_temp,max_temp,humidity,pressure,visibility,wind_speed)
+            // map.src=`https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+            container.append(h1,name,box1,heading1,box2);
+            container.style.backgroundColor="rgb(56, 56, 56)"
+
+    let iframe=document.getElementById('gmap_canvas')
+    iframe.src = url;
+}
+
+
+
+    function getLocation(){
+        navigator.geolocation.getCurrentPosition(success);
+
+        function success(pos) {
+        const crd = pos.coords;
+        console.log('Your current position is:');
+        console.log(`Latitude : ${crd.latitude}`);
+        console.log(`Longitude: ${crd.longitude}`);
+        console.log(`More or less ${crd.accuracy} meters.`);
+        getLocationOnTime(crd.latitude,crd.longitude)
+        }
+}    
+
+getLocation();
+//https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
+
+
+function getLocationOnTime(lat,lon){
+    // console.log(lon,lat)
+// let city=document.getElementById("query").value;
+let url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=931d66c5f38c9520a28ce87ded1910ed&units=metric`
+
+fetch(url)
+.then(function(res){
+    return res.json();
+   
+   
+})
+.then(function(res){
+    console.log(res)
+    append(res)
+});
+}
+
+
+let container=document.getElementById("container");
+    let map=document.getElementById("gmap_canvas");
+    let data;
+    async function getWeather(){
+        let city= document.getElementById('query').value; 
+        let url=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=931d66c5f38c9520a28ce87ded1910ed&units=metric`;
+
+        try{
+            let res=await fetch(url);
+            let data= await res.json();
+            console.log(data)
+            appendData(data);
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+        function appendData(data){
+            container.innerHTML=null;
+
+            let name=document.createElement("h1");
+            name.innerText=`CITY ► ${data.name}, ${data.sys.country}`;
+            name.setAttribute("id","cityName");
+
+            let temp=document.createElement("p");
+            temp.innerText=`${data.main.temp}°C`;
+            temp.setAttribute("id","temp");
+
+            let feels_like=document.createElement("h2");
+            feels_like.innerText=`► Feels like ${data.main.feels_like}°C 🌡 `;
+
+            let min_temp=document.createElement("p");
+            min_temp.innerText=`minimum Temperature 🌡 :- ${data.main.temp_min}°C`;
+
+            let max_temp=document.createElement("p");
+            max_temp.innerText=`maximum Temperature 🌡 :-${data.main.temp_max}°C`;
+
+            let humidity=document.createElement("p");
+            humidity.innerText=`Humidity ☃ :- ${data.main.humidity}%`;
+
+            let pressure=document.createElement("p");
+            pressure.innerText=`Pressure ☈ :- ${data.main.pressure}hPa`;
+            
+            let wind_speed=document.createElement("p");
+            wind_speed.innerText=`Wind Speed ☇:-  ${data.wind.speed}m/s WSW`
+            // console.log(data.sy);
+            let absoluteVisibility=+`${data.visibility}`/1000
+            let visibility=document.createElement("p");
+            visibility.innerText=`Visibility ☄ :- ${absoluteVisibility}.0km`
+
+            let weather=document.createElement("p");
+                // weather.style.color="white"
+            weather.setAttribute("id","weather")
+            
+            if(`${data.weather[0].main}`=="Clear"){
+                weather.innerText="🌤";
+                weather.style.color="yellow"
+                }else if(`${data.weather[0].main}`=="Clouds"){
+                weather.innerText="☁";
+                weather.style.color="#ccc"
+                }else if(`${data.weather[0].main}`.includes("Rain")){
+                weather.innerText="🌧";
+                weather.style.color="skyblue"
+            }
+            let h1=document.createElement("div");
+            h1.innerHTML=`<h1>Weather Details ▼</h1>`
+            h1.setAttribute("id","heading");
+            h1.style.color="red"
+            let box1=document.createElement("div");
+            box1.setAttribute("id","box1");
+            let heading1=document.createElement("h2");
+            heading1.setAttribute("id","heading1");
+            let box2=document.createElement("div");
+            box2.setAttribute("id","box2");
+
+            box1.append(weather,temp);
+            heading1.append(feels_like);
+            box2.append(min_temp,max_temp,humidity,pressure,visibility,wind_speed)
+            map.src=`https://maps.google.com/maps?q=${data.name}&t=&z=13&ie=UTF8&iwloc=&output=embed` 
+            container.append(h1,name,box1,heading1,box2);
+            container.style.backgroundColor="rgb(56, 56, 56)"
+        }
+
+</script>
